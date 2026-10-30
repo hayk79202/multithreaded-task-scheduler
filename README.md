@@ -1,5 +1,7 @@
 # Multithreaded Task Scheduler
 
+![Build and test](https://github.com/hayk79202/multithreaded-task-scheduler/actions/workflows/ci.yml/badge.svg)
+
 A compact C++17 thread pool that runs submitted jobs on a fixed set of worker threads. It is designed as a readable systems programming project: the implementation is intentionally small enough to audit.
 
 ## What it does
@@ -20,6 +22,8 @@ ctest --test-dir build --output-on-failure
 ```
 
 Requires a C++17 compiler, CMake 3.16+, and a platform with threads. On Windows, run the generated executable from the build configuration directory (for example `build/Debug/scheduler_demo.exe`).
+
+The demo prints the squares of 1 through 8: `1 4 9 16 25 36 49 64`.
 
 ## Design
 
