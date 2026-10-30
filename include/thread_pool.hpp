@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <functional>
 #include <future>
+#include <memory>
 #include <mutex>
 #include <queue>
 #include <stdexcept>
