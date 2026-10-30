@@ -28,7 +28,7 @@ submit(fn) -> packaged task -> synchronized queue -> worker thread -> future
                               shutdown drains queue
 ```
 
-`ThreadPool` owns its workers. Destruction calls `shutdown()`, joins every worker, and waits for already queued tasks to finish. A task exception is stored in its future. The test executable covers results, exception propagation, and queue draining.
+`ThreadPool` owns its workers. Destruction calls `shutdown()`, joins every worker, and waits for already queued tasks to finish. A task exception is stored in its future. The test executable covers many submitted jobs, exception propagation, queue draining, rejection after shutdown, and the zero-worker fallback. GitHub Actions builds and tests on Linux and Windows.
 
 ## Scope
 
@@ -39,6 +39,7 @@ This is a small working prototype, not a production scheduler. It has no priorit
 - `include/thread_pool.hpp` — pool implementation
 - `src/main.cpp` — example program
 - `tests/thread_pool_test.cpp` — basic behavior checks
+- `.github/workflows/ci.yml` — Linux and Windows build checks
 
 ## License
 
