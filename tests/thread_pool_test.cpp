@@ -1,4 +1,5 @@
 #include "thread_pool.hpp"
+#include <atomic>
 #include <stdexcept>
 #include <vector>
 
@@ -16,6 +17,12 @@ int main() {
     int sum = 0;
     for (auto& result : results) sum += result.get();
     require(sum == 328350);
+    std::atomic<int> completed{0};
+    for (int i = 0; i < 20; ++i) {
+        pool.submit([&completed] { ++completed; });
+    }
+    pool.wait_for_idle();
+    require(completed == 20);
     auto failure = pool.submit([]() -> int { throw std::runtime_error("expected"); });
     try {
         failure.get();

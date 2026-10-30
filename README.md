@@ -7,6 +7,7 @@ A compact C++17 thread pool that runs submitted jobs on a fixed set of worker th
 - Accepts callable tasks and returns `std::future` results.
 - Queues work safely with a mutex and condition variable.
 - Drains queued tasks during graceful shutdown.
+- Can wait for all queued and running tasks with `wait_for_idle()`.
 - Rejects new submissions after shutdown begins.
 
 ## Quick start
@@ -28,7 +29,7 @@ submit(fn) -> packaged task -> synchronized queue -> worker thread -> future
                               shutdown drains queue
 ```
 
-`ThreadPool` owns its workers. Destruction calls `shutdown()`, joins every worker, and waits for already queued tasks to finish. A task exception is stored in its future. The test executable covers many submitted jobs, exception propagation, queue draining, rejection after shutdown, and the zero-worker fallback. GitHub Actions builds and tests on Linux and Windows.
+`ThreadPool` owns its workers. Destruction calls `shutdown()`, joins every worker, and waits for already queued tasks to finish. A task exception is stored in its future. Call `wait_for_idle()` from outside the pool when you need to wait without retaining every future. The test executable covers many submitted jobs, idle waiting, exception propagation, queue draining, rejection after shutdown, and the zero-worker fallback. GitHub Actions builds and tests on Linux and Windows.
 
 ## Scope
 

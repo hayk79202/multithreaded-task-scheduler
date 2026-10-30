@@ -28,8 +28,14 @@ public:
                             if (stopping_ && jobs_.empty()) return;
                             job = std::move(jobs_.front());
                             jobs_.pop();
+                            ++active_;
                         }
                         job();
+                        {
+                            std::lock_guard<std::mutex> lock(mutex_);
+                            --active_;
+                            if (jobs_.empty() && active_ == 0) idle_.notify_all();
+                        }
                     }
                 });
             }
@@ -71,10 +77,17 @@ public:
         }
     }
 
+    void wait_for_idle() {
+        std::unique_lock<std::mutex> lock(mutex_);
+        idle_.wait(lock, [this] { return jobs_.empty() && active_ == 0; });
+    }
+
 private:
     std::vector<std::thread> workers_;
     std::queue<std::function<void()>> jobs_;
     std::mutex mutex_;
     std::condition_variable ready_;
+    std::condition_variable idle_;
+    std::size_t active_ = 0;
     bool stopping_ = false;
 };
